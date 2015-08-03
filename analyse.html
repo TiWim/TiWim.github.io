@@ -1,102 +1,95 @@
 <!DOCTYPE html>
 <html>
 <title>Hacking Skills</title>
-    
-<xmp theme="united" style="display:none;"
-<div class="header">
-    </div>
-    <div class="center">
 
-        <h1>How to analyse statically a program with GDB:</h1>
+<xmp theme="united" style="display:none;">
 
-        <h2>Usefull tools:</h2>
+# How to analyse statically a program with GDB:
 
-        <ul>
-            <li>strace</li>
-            <li>ltrace</li>
-            <li>readelf</li>
-            <li>gdb</li>
-            <li>objdump</li>
-            <li>strings</li>
-            <li>strip</li>
-            <li>radare2</li>
-            <li>python</li>
-        </ul>
+## Usefull tools:
 
-        <h2>Example:</h2>
-        <p>Here is the code that I will use as example for this tutorial:</p>
+    - strace
+    - ltrace
+    - readelf
+    - gdb
+    - objdump
+    - strings
+    - strip
+    - radare2
+    - python
 
-        <div class="C-code">
-            // Author : TiWim<br/>
-            // Compilation : gcc vulnerable.c -o vulnerable<br/>
-<br/>
-            #include <stdio.h><br/>
-            #include <string.h><br/>
-<br/>
-            int main (int argc, char ** argv){<br/>
-            char message[20];<br/>
-            if (argc != 2){<br/>
-            printf ("Usage: %s <message>\n", argv[0]);<br/>
-            return -1;<br/>
-            }<br/>
-            strcpy (message, argv[1]);<br/>
-            printf ("Your message: %s\n", message);<br/>
-            return 0;<br/>
-<br/>
-            }<br/>
-        </div><br/><br/>
-        This code is vulnerable to code injection and buffer overflows.
+## Example:
+
+Here is the code that I will use as example for this tutorial:
+
+```c
+// Author : TiWim
+// Compilation : gcc vulnerable.c -o vulnerable
+
+#include <stdio.h>
+#include <string.h>
+
+int main (int argc, char ** argv){
+    char message[20];
+
+    if (argc != 2){
+        printf ("Usage: %s <message>\n", argv[0]);
+        return -1;
+    }
+
+    strcpy (message, argv[1]);
+    printf ("Your message: %s\n", message);
+    return 0;
+}
+```
+
+This code is vulnerable to code injection and buffer overflows.
 
 
-        ## Software analysis:
+## Software analysis:
 
-        First of all:
-        we need to execute the command file on the programm to verify that we are legit to disassemble it.
+First of all:
+we need to execute the command file on the programm to verify that we are legit to disassemble it.
 
-        file ./soft
+file ./soft
 
-        Then, we can run gdb:
+Then, we can run gdb:
 
-        gdb -q ./soft
+gdb -q ./soft
 
-        We can disassemble some part of the software with the command disassemble:
+We can disassemble some part of the software with the command disassemble:
 
-        disass main
+disass main
 
 
 
-        Afficher le contenu de la stack:
-        x/24x $esp
+Afficher le contenu de la stack:
+x/24x $esp
 
 
-        Afficher une adresse:
-        print (void*) $esp
-        print (void*) $esp+0x30
+Afficher une adresse:
+print (void*) $esp
+print (void*) $esp+0x30
 
-        Afficher le contenu d'une adresse
-        x/x $esp+0x30
+Afficher le contenu d'une adresse
+x/x $esp+0x30
 
-        jump *adresse
-        jump *main+144
+jump *adresse
+jump *main+144
 
-        stepi
+stepi
 
-        br *adresse
-        br *main+144
+br *adresse
+br *main+144
 
-        continue c
-        run r
-        kill ki
+continue c
+run r
+kill ki
 
+watch
 
-
-        - Objdump
-        dump d'un fichier binaire en assembleur
-
-    </div>
-    <div class="footer">
-    </div>
-
+- Objdump
+dump d'un fichier binaire en assembleur
 
 </xmp>
 
