@@ -124,3 +124,6 @@ http://www.mcherifi.org/tag/bypasser-filtre-sql
 
 ## app
 https://developer.android.com/sdk/installing/index.html?pkg=tools
+
+## Crypto
+http://www.dcode.fr/
