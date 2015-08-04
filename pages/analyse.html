@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<title>Hacking Skills</title>
+
+<xmp theme="united" style="display:none;">
+
+# How to analyse statically a program with GDB:
+
+## List of useful tools:
+
+- [strace](http://linux.die.net/man/1/strace) : Traces system calls and signals
+- [ltrace](http://linux.die.net/man/1/ltrace) : Intercepts and records the dynamic libraries called by the executed process
+- [readelf](http://linux.die.net/man/1/readelf) : Displays information about ELF files
+- [gdb](http://linux.die.net/man/1/gdb) : GNU Debugger allows you to see what is going on inside another program
+- [objdump](http://linux.die.net/man/1/objdump) : Displays information from object files
+- [strings](http://linux.die.net/man/1/strings) : Prints the strings of printable characters in files
+- [strip](http://linux.die.net/man/1/strip) : Discards symbols from object files
+- [radare2](http://radare.org/) : Multi-architecture, cross-plateform reverse engineering framework for dissasembling (PE, ELF and mach0) and debugging
+- [bokken](http://www.bokken.re/) : GTK GUI implenting most of radare2 functionalities
+- [python](https://www.python.org/downloads/) : Scripting and OOP made easier
+
+## Example:
+
+Here is the code that I will use as example for this tutorial:
+
+```c
+// Author : TiWim
+// Compilation : gcc vulnerable.c -o vulnerable -m32
+// For any compilation problem, try to install libc6-dev-i386 first
+
+#include <stdio.h>
+#include <string.h>
+
+int main (int argc, char ** argv){
+    char message[20];
+
+    if (argc != 2){
+        printf ("Usage: %s <message>\n", argv[0]);
+        return -1;
+    }
+
+    strcpy (message, argv[1]);
+    printf ("Your message: %s\n", message);
+    return 0;
+}
+```
+
+
+
+This code is vulnerable to code injection and buffer overflows.
+We will first analyse it in a 32 bits architecture without ASLR.
+
+
+## Software analysis:
+
+First of all:
+we need to execute the command file on the programm to verify that we are legit to disassemble it.
+
+file ./soft
+
+Then, we can run gdb:
+
+gdb -q ./soft
+
+We can disassemble some part of the software with the command disassemble:
+
+disass main
+
+
+
+---------------
+
+
+Afficher le contenu de la stack:
+x/24x $esp
+
+
+Afficher une adresse:
+print (void*) $esp
+print (void*) $esp+0x30
+
+Afficher le contenu d'une adresse
+x/x $esp+0x30
+
+jump *adresse
+jump *main+144
+
+stepi
+nexti
+
+br *adresse
+br *main+144
+
+continue c
+run r
+kill ki
+
+watch
+
+- Objdump
+dump d'un fichier binaire en assembleur
+
+</xmp>
+
+<script src="../strapdown.js"></script>
+</html>
+

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<title>Hacking Skills</title>
+
+<xmp theme="united" style="display:none;">
+
+
+# Upgrader Wheezy 
+
+La nouvelle version stable de Debian est sortie le 25 avril. Pourquoi s'en
+priver?
+
+Pour upgrader sa distri, rien de plus facile:
+
+1. Editer son /etc/apt/sources.list, remplacer toutes les mentions "wheezy" par
+"jessie"
+    ```bash
+    deb http://ftp.fr.debian.org/debian jessie main
+    deb-src http://ftp.fr.debian.org/debian jessie main
+
+    deb http://ftp.fr.debian.org/debian jessie-update main
+    deb-src http://ftp.fr.debian.org/debian jessie-update main
+    
+    deb http://security.debian.org/debian jessie/updates main
+    deb-src http://security.debian.org/debian jessie/updates main
+    ```
+
+    Ajoutez &eacute;ventuellement "contrib non-free" &agrave; la fin de chaque ligne si la
+    perspective d'avoir des logiciels non libres ne vous d&eacute;goute pas trop. De
+    toute fa&ccedil;on, pour nvidia, il faudra les ajouter.
+    Attention, vous avez peut-être encore la distribution de l'&eacute;cole avec une
+    liste bizarre de d&eacute;pots. Il faut v&eacute;rifier ce que vous avez dans
+    "apt.conf.d", il y a notamment le nom de l'ancienne version "wheezy", et
+    dans preferences.d, il y a des d&eacute;pots comme apt-cacher (le cache de l'eisti)
+    et deb.multimedia. Il est fortement conseill&eacute; de supprimer tout ce qui
+    contient le mot "eisti". Avec la commande "tree", &ccedil;a devrait aller assez
+    vite.
+
+2. Mettre &agrave; jour sa liste de d&eacute;pots:
+    ```bash
+    apt-get update
+    ```
+
+3. Mettre &agrave; niveau sa distribution:
+    ```bash
+    apt-get dist-upgrade
+    ```
+
+4. V&eacute;rifier que le noyau est correctement install&eacute;:
+    ```bash
+    dpkg -l | grep -Ei "linux-headers|linux-image"
+    ```
+
+    Il faut que la commande vous affiche les
+    informations suivantes: 
+    ```bash
+    ii  linux-headers-3.16.0-4-amd64    3.16.7-ckt9-3~deb8u1  amd64    Header files for Linux 3.16.0-4-amd64
+    ii  linux-headers-3.16.0-4-common   3.16.7-ckt9-3~deb8u1  amd64    Common header files for Linux 3.16.0-4
+    ii  linux-headers-3.2.0-4-amd64     3.2.68-1+deb7u1       amd64    Header files for Linux 3.2.0-4-amd64
+    ii  linux-headers-3.2.0-4-common    3.2.68-1+deb7u1       amd64    Common header files for Linux 3.2.0-4
+    ii  linux-headers-amd64             3.16+63               amd64    Header files for Linux amd64 configuration (meta-package)
+    ii  linux-image-3.16.0-4-amd64      3.16.7-ckt9-3~deb8u1  amd64    Linux 3.16 for 64-bit PCs
+    ii  linux-image-3.2.0-4-amd64       3.2.68-1+deb7u1       amd64    Linux 3.2 for 64-bit PCs
+    ii  linux-image-amd64               3.16+63               amd64    Linux for 64-bit PCs (meta-package)
+    ```
+    S'il vous manque l'une des lignes ci-dessus en "3.16.0-4", c'est le
+    moment de les t&eacute;l&eacute;charger. Cela correspond au nouveau noyau.
+    
+5. Mettre &agrave; jour le grub:
+    ```bash
+    update-grub
+    ```
+    pour pouvoir booter sur le nouveau noyau, le grub vous
+    affichera alors plusieurs choix de noyaux, mais seul le 3.16
+    fonctionnera d&eacute;sormais.
+
+6. Mettre &agrave; jour les pilotes nvidia: 
+    ```bash
+    apt-get install nvidia-kernel-3.16.0-4-amd64 nvidia-kernel-dkms
+    ``` 
+    sinon, gdm3 ne d&eacute;marrera pas et vous n'aurez plus que le terminal (de toute
+    mani&egrave;re l'interface graphique c'est pour les faibles ;) )
+
+7. reboot and enjoy!!!
+
+Vous pourrez avoir apr&egrave;s des petits probl&egrave;mes de d&eacute;pendances (j'ai rencontr&eacute;
+ un probl&egrave;me avec Samba et vlc que j'ai r&eacute;solu en supprimant des paquets de
+ vlc(vlc-data vlc-nox) qui n'&eacute;taient pas &agrave; niveau et en r&eacute;installant samba. 
+ 
+Par contre sur l'autre pc, j'ai eu un probleme
+ avec initramfs qui c'est r&eacute;solu en le d&eacute;sinstallant et en installant la
+ nouvelle version). Surtout, ne faites pas de upgrade entre la 2&egrave;me et la 3&egrave;me 
+&eacute;tape, vous allez perdre du temps (La machine installe des mises &agrave; jours 
+qu'elle va r&eacute;installer lors du dist-upgrade car cette commande g&egrave;re tous les probl&egrave;mes de d&eacute;pendances de mises &agrave; niveau.)
+
+</xmp>
+
+<script src="strapdown.js"></script>
+</html>
