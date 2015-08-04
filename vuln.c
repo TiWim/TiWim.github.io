@@ -15,5 +15,4 @@ int main (int argc, char ** argv){
     strcpy (message, argv[1]);
     printf ("Your message: %s\n", message);
     return 0;
-
 }
