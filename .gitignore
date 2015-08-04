@@ -55,4 +55,8 @@ docs/_build/
 
 # PyBuilder
 target/
-vuln
+
+# Custom
+vuln{,erable}
+a.out
+*.swp

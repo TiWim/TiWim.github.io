@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <title>Hacking Skills</title>
+
+    <xmp theme="slate" style="display:none;">
+
+
+# Packet list
+
+List of powerful tools to install on a fresh installed and minimal debian distribution:
+You can find a script for this at the bottom of the page.
+
+As you will see, most of these packets can be found natively on Kali Linux. So, why do we publish this page?
+Because Kali Linux is a pentest distribution. They don't have as stable packets as Debian and their security checks are not as strong as Debian's.
+When you install Kali Linux, you can't choose the packets to install, so you a huge list of installed packets and you don't know about many of them.
+
+With this option, you install manually all of them and you know exactly how to use them.
+
+## Network:
+  - [telnet](http://linux.die.net/man/1/telnet)
+  - [netcat](http://linux.die.net/man/1/nc)
+  - [dnsutils](http://linux.die.net/man/1/nslookup) (dns tools)
+  - [ldap-utils](http://linux.die.net/man/1/ldapsearch) (ldap tools)
+  - [tshark](http://linux.die.net/man/1/tshark) (packet listener)
+  - [aircrack-ng](http://linux.die.net/man/1/aircrack-ng) (WEP / WPA-PSK key cracking suite)
+  - pyrit (same as aircrack but on both CPU and GPU)
+  - [ssh](http://linux.die.net/man/1/ssh) (remote connection tool)
+  - [scapy](http://linux.die.net/man/1/scapy) (python networking tool)
+  - [nmap](http://linux.die.net/man/1/nmap) (network scanning tool)
+  - curl
+  - lynx (shell webbrowser)
+
+## Programming and reversing:
+  - build-essential (compiling tools in different languages)
+  - [gdb](http://linux.die.net/man/1/gdb) (debugger)
+  - [gdb-peda](https://github.com/longld/peda) (Python Exploit Development Assistance for GDB: Anhanced interface for gdb)
+  - python2.7
+  - [ltrace](http://linux.die.net/man/1/ltrace) (library call tracer)
+  - [strace](http://linux.die.net/man/1/strace) (trace system calls and signals)
+  - dex2jar (kali)
+  - apktool (kali)
+  - [Java graphical decompiler](github.com/deathmarine/Luyten/releases/download/v0.4.4/luyten-0.4.4.jar) (java decompiler)
+  - [upx](http://linux.die.net/man/1/upx) (executable packer)
+  - spidermonkey-bin (javascript engine callable with __js__ command)
+
+## Editing:
+  - [hexdump](http://linux.die.net/man/1/hexdump)
+  - [vim](http://linux.die.net/man/1/vim)
+
+## Graphical environnement:
+  - i3wm (i3, i3-wm, i3lock, xautolock, notify-bin)
+  - xinerama
+  - xinit
+  - xserver-xorg-video-nouveau (or any graphic driver supported by the machine)
+  - [feh](http://linux.die.net/man/1/feh) (image viewer)
+  - [zathura] (pdf viewer (less in CLI))
+  - [wireshark](http://linux.die.net/man/1/wireshark) (graphical packet listener and analyser)
+  - [idademo](https://www.hex-rays.com/products/ida/support/download_demo.shtml) (Powerful disassembling tool)
+
+## Audio:
+  - [audacity](http://linux.die.net/man/1/audacity) (audio editing tool)
+
+## Forensic:
+  - volatility (memory analysis tool)
+  - [foremost](http://linux.die.net/man/1/foremost) (deleted files recovery tool)
+  - [libexiftool](http://linux.die.net/man/1/exiftool) (metadata analyser)
+  - [pdfinfo](http://linux.die.net/man/1/pdfinfo) (pdf metadata analyser)
+
+## Web:
+  - sqlmap
+  - vega
+  - nikto
+
+## Other:
+  - metasploit
+  - [htop](http://linux.die.net/man/1/htop) (process watcher)
+  - [locate](http://linux.die.net/man/1/locate)
+  - bash-completion
+  - tmux / screen (terminal multiplexer)
+  - [irssi](http://linux.die.net/man/1/irssi) (To keep contact with hackers)
+  - john
+  - crunch (wordlist generator)
+  - [git](http://linux.die.net/man/1/git)
+  - hashcat
+  <br/>
+  <br/>
+[Automation script](https://raw.githubusercontent.com/tiwim/packetList/master/install.sh)
+    </xmp>
+
+    <script src="../strapdown.js"></script>
+</html>

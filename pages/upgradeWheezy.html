@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<title>Hacking Skills</title>
+
+<xmp theme="slate" style="display:none;">
+
+
+# Upgrader Wheezy 
+
+La nouvelle version stable de Debian est sortie le 25 avril. Pourquoi s'en
+priver?
+
+Pour upgrader sa distri, rien de plus facile:
+
+Vous avez ce tableau de correspondance:
+
+  | Nom de version |  Etat | num&eacute;ro |
+  | -------------  | ----- | ------ |
+  | Lenny   | Oldoldstable | 6      |
+  | Wheezy  |    Oldstable | 7.8.0  |
+  | Jessie  |       stable | 8.1.0  |
+  | Stretch |      Testing | 9.0.0  |
+  | Sid     |     Unstable | NaN    |
+
+
+1. Editer son /etc/apt/sources.list, remplacer toutes les mentions "wheezy" par
+"jessie" ou "stable" ou "testing" ou encore "unstable" suivant ce que vous avez envie de faire
+  
+  Dans /etc/apt/sources.list:
+  ```bash
+  deb http://ftp.fr.debian.org/debian jessie main
+  deb-src http://ftp.fr.debian.org/debian jessie main
+  
+  deb http://ftp.fr.debian.org/debian jessie-update main
+  deb-src http://ftp.fr.debian.org/debian jessie-update main
+  
+  deb http://security.debian.org/debian jessie/updates main
+  deb-src http://security.debian.org/debian jessie/updates main
+  ```
+
+  Ajoutez &eacute;ventuellement "contrib non-free" &agrave; la fin de chaque ligne si la
+  perspective d'avoir des logiciels non libres ne vous d&eacute;goute pas trop. De
+  toute fa&ccedil;on, pour vos pilotes vid&eacute;os et pour votre carte r&eacute;seau, il faudra les ajouter.
+  Attention, vous avez peut-&ecirc;tre des sources dans apt.conf.d et dans preferences.d.
+  Il faut v&eacute;rifier qu'il n'y a plus la mention "wheezy" dans les diff&eacute;rents fichiers.
+
+2. Mettre &agrave; jour sa liste de d&eacute;pots:
+    ```bash
+    apt-get update
+    ```
+
+3. Mettre &agrave; niveau sa distribution:
+    ```bash
+    apt-get dist-upgrade
+    ```
+
+4. V&eacute;rifier que le noyau est correctement install&eacute;:
+    ```bash
+    dpkg -l | grep -Ei "linux-headers|linux-image"
+    ```
+
+    Il faut que la commande vous affiche les
+    informations suivantes: 
+    ```bash
+    ii  linux-headers-3.16.0-4-amd64    3.16.7-ckt9-3~deb8u1  amd64    Header files for Linux 3.16.0-4-amd64
+    ii  linux-headers-3.16.0-4-common   3.16.7-ckt9-3~deb8u1  amd64    Common header files for Linux 3.16.0-4
+    ii  linux-headers-3.2.0-4-amd64     3.2.68-1+deb7u1       amd64    Header files for Linux 3.2.0-4-amd64
+    ii  linux-headers-3.2.0-4-common    3.2.68-1+deb7u1       amd64    Common header files for Linux 3.2.0-4
+    ii  linux-headers-amd64             3.16+63               amd64    Header files for Linux amd64 configuration (meta-package)
+    ii  linux-image-3.16.0-4-amd64      3.16.7-ckt9-3~deb8u1  amd64    Linux 3.16 for 64-bit PCs
+    ii  linux-image-3.2.0-4-amd64       3.2.68-1+deb7u1       amd64    Linux 3.2 for 64-bit PCs
+    ii  linux-image-amd64               3.16+63               amd64    Linux for 64-bit PCs (meta-package)
+    ```
+    S'il vous manque l'une des lignes ci-dessus en "3.16.0-4", c'est le
+    moment de les t&eacute;l&eacute;charger. Cela correspond au nouveau noyau.
+    
+5. Mettre &agrave; jour le grub:
+    ```bash
+    update-grub
+    ```
+    pour pouvoir booter sur le nouveau noyau, le grub vous
+    affichera alors plusieurs choix de noyaux, mais seul le 3.16
+    fonctionnera d&eacute;sormais.
+
+6. Mettre &agrave; jour les pilotes graphiques: 
+  - Pour Nvidia:
+    ```bash
+    apt-get install nvidia-kernel-3.16.0-4-amd64 nvidia-kernel-dkms
+    ``` 
+    sinon, gdm3 ne d&eacute;marrera pas et vous n'aurez plus que le terminal.
+  - Pour les autres pilotes, je ne sais pas comment &ccedil;a se passe. 
+<br>
+<br>
+7. reboot and enjoy!!!
+
+<br>
+Vous pourrez avoir apr&egrave;s des petits probl&egrave;mes de d&eacute;pendances (j'ai rencontr&eacute;
+un probl&egrave;me avec Samba et vlc que j'ai r&eacute;solu en supprimant des paquets de
+vlc(vlc-data vlc-nox) qui n'&eacute;taient pas &agrave; niveau et en r&eacute;installant samba. 
+J'ai aussi rencontr&eacute; des probl&egrave;me avec initramfs qui s'est r&eacute;solu en le d&eacute;sinstallant et en installant la
+nouvelle version). Surtout, ne faites pas de upgrade entre la 2&egrave;me et la 3&egrave;me 
+&eacute;tape, vous allez perdre du temps (La machine installe des mises &agrave; jours 
+qu'elle va r&eacute;installer lors du dist-upgrade car cette commande g&egrave;re tous les probl&egrave;mes de d&eacute;pendances de mises &agrave; niveau.)
+
+</xmp>
+
+<script src="../strapdown.js"></script>
+</html>

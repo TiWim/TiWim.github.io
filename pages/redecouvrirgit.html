@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<title>Hacking Skills</title>
+
+<xmp theme="slate" style="display:none;">
+
+# Guide pratique de Git
+
+## Commandes de base 
+
+Dans cette section, nous allons voir ensemble les commandes usuelles de Git:
+
+* git add
+* git commit
+* git pull
+* git push
+* git status
+
+## Commandes avanc&eacute;es
+
+* git branch
+* git checkout
+* git merge
+* git rebase
+* git reset
+* fork / merge request
+* remote add origin git@github.com:/user/repos.git : permet de rajouter un repos distant a partir d'un dossier existant
+
+### git rebase ###
+
+Comme vous l'avez peut-être remarqué, il y a une branche verte et une autre
+rouge dans l'arborescence. J'ai fait un git reset --hard HEAD pour revenir de
+quelques commits en arrière (car dans git rien n'est jamais perdu) pour pouvoir
+tester la commande rebase. Cette commande permet de regrouper ensemble plusieurs
+commits. C'est pourquoi la branche rouge n'a que très peu de points alors que la
+verte a encore tous les commits. Si sur la branche rouge on regarde le commit
+update.md, on voit qu'il en regroupe en fait une dizaine.
+
+(git rebase tout court ne marche pas / revenir en arrière en faisant git stash)
+git rebase HEAD, puis squash.
+http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html
+
+git rebase HEAD~3 -i
+première ligne pick
+les autres s
+
+puis faire un git push -f
+
+
+
+</xmp>
+
+<script src="strapdown.js"></script>
+</html>
