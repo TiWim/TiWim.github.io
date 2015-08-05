@@ -1,5 +1,6 @@
 // Author : TiWim
 // Compilation : gcc vulnerable.c -o vulnerable
+// For any compilation problem, try to install libc6-dev-i386 first
 
 #include <stdio.h>
 #include <string.h>
