@@ -17,23 +17,25 @@
 
 ## Web
 
-- http://www.infond.fr/2009/12/http-splitting-attack.html
-- http://www.infond.fr/2010/06/tutoriel-injection-sql-lampsecurity.html
-- http://infondlinux.googlecode.com/svn/trunk/infondlinux.sh
-
-
 - http://www.bases-hacking.org/faille-xss.html
 - http://www.hardened-php.net/advisory_172005.75.html
 - http://josipfranjkovic.blogspot.fr/2014/12/reading-local-files-from-facebooks.html
 - https://wiki.zenk-security.com/doku.php?id=failles_web:xpath_injection
 - https://websec.wordpress.com/2010/02/22/exploiting-php-file-inclusion-overview/
 - https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
+- [Natas wargame](http://wiki.zenk-security.com/doku.php?id=natas_wargame)
+
+
+- http://www.infond.fr/2009/12/http-splitting-attack.html
+- http://www.infond.fr/2010/06/tutoriel-injection-sql-lampsecurity.html
+- http://infondlinux.googlecode.com/svn/trunk/infondlinux.sh
+
 
 ## Forensic
 
 - http://www.lestutosdenico.com/tutos-de-nico/writeup-wargame-ndh-2k12
 - https://github.com/dfirfpi/hotoloti/blob/master/volatility/mimikatz.py
-
+- http://blogs.technet.com/b/nettracer/archive/2010/10/01/how-to-decrypt-an-ssl-or-tls-session-by-using-wireshark.aspx
 
 ## Network
 
@@ -66,37 +68,19 @@
 - http://gits.hydraze.org/cat-9-failles-applicatives.html
 - http://www.securiteam.com/securityreviews/5OP0B006UQ.html
 - http://blog.delroth.net/2013/03/escaping-a-python-sandbox-ndh-2013-quals-writeup/
-- https://github.com/longld/peda
-- https://exploit-exercises.com/nebula/
 - http://resources.infosecinstitute.com/stack-based-buffer-overflow-tutorial-part-1-introduction/
 
 
+- [Vulnerable vms on Vulnhub](http://www.vulnhub.com/)
+- [Nebula exploit-exercices](https://exploit-exercises.com/nebula/)
+
+
+### ROP
 - http://www.exploit-monday.com/2011/11/man-vs-rop-overcoming-adversity-one.html
 - https://media.blackhat.com/bh-us-10/whitepapers/Le/BlackHat-USA-2010-Le-Paper-Payload-already-inside-data-reuse-for-ROP-exploits-wp.pdf
-
-
-- http://security.cs.rpi.edu/courses/binexp-spring2015/Syllabus.pdf
-- http://security.cs.rpi.edu/courses/binexp-spring2015/
-
-
-- http://shell-storm.org/project/ROPgadget/
-
-
-- http://thanat0s.trollprod.org/tag/radare2/
-- http://thanat0s.trollprod.org/2014/05/radare2-guide-de-survie/
-
-
-- https://www.dailysecurity.fr/la-stack-smashing-protection/
-
-
-#### Exploit-DB
-- [Unix Wildcards](https://www.exploit-db.com/papers/33930/)
-- [Backdooring with netcat shellcode](https://www.exploit-db.com/papers/35538/)
-- [Anatomy of Exploit - World of Shellcode](https://www.exploit-db.com/papers/35646/)
-- [Bypassing ASLR/DEP](https://www.exploit-db.com/docs/17914.pdf)
-- [64 Bits Linux Stack Based Buffer Overflow](https://www.exploit-db.com/docs/33698.pdf)
-- [Hacking Blind - BROP](https://www.exploit-db.com/docs/33872.pdf)
-- [Deep Dive into ROP Payload Analysis](https://www.exploit-db.com/docs/35355.pdf)
+- [ROPgadget project](http://shell-storm.org/project/ROPgadget/)
+- [Exploit-DB: Deep Dive into ROP Payload Analysis](https://www.exploit-db.com/docs/35355.pdf)
+- [Exploit-DB: Hacking Blind - BROP](https://www.exploit-db.com/docs/33872.pdf)
 
 
 ### Format String
@@ -107,9 +91,23 @@
 - http://wiki.zenk-security.com/doku.php?id=failles_app:format_string
 - http://repo.zenk-security.com/Techniques%20d.attaques%20%20.%20%20Failles/Les%20failles%20Format%20String.pdf
 - https://www.youtube.com/watch?v=i6T4oMWqa4E&app=desktop
+- [Exploit-DB - Vuln&eacute;rabilit&eacute; Format String](https://www.exploit-db.com/papers/23985/)
+- [Exploit-DB - GOT](ttps://www.exploit-db.com/papers/13203/)
+
+### Blogs
+- http://security.cs.rpi.edu/courses/binexp-spring2015/Syllabus.pdf
+- http://security.cs.rpi.edu/courses/binexp-spring2015/
+- http://thanat0s.trollprod.org/tag/radare2/
+- http://thanat0s.trollprod.org/2014/05/radare2-guide-de-survie/
+- https://www.dailysecurity.fr/la-stack-smashing-protection/
 
 
-- [Exploit-DB - Exploitation de vuln&eacute;rabilit&eacute; Format String](https://www.exploit-db.com/papers/23985/)
+### Exploit-DB
+- [Unix Wildcards](https://www.exploit-db.com/papers/33930/)
+- [Backdooring with netcat shellcode](https://www.exploit-db.com/papers/35538/)
+- [Anatomy of Exploit - World of Shellcode](https://www.exploit-db.com/papers/35646/)
+- [Bypassing ASLR/DEP](https://www.exploit-db.com/docs/17914.pdf)
+- [64 Bits Linux Stack Based Buffer Overflow](https://www.exploit-db.com/docs/33698.pdf)
 
 
 ## Crypto
@@ -140,7 +138,6 @@
 
 ## Unclassified
 
-- http://wiki.zenk-security.com/doku.php?id=natas_wargame
 - https://github.com/orf/xcat/tree/master/xcat
 - http://25zbkz3k00wn2tp5092n6di7b5k.wpengine.netdna-cdn.com/files/2015/02/Equation_group_questions_and_answers.pdf
 - https://www.securiteinfo.com/attaques/hacking/challengeshacking.shtml
@@ -150,19 +147,15 @@
 - http://lcamtuf.coredump.cx/
 - http://www.miscmag.com/
 - http://www.commentcamarche.net/forum/affich-2778955-crontab-afficher-message
-- http://www.learncpp.com/cpp-tutorial/93-overloading-the-io-operators/
-- https://community.rapid7.com/docs/DOC-2248
-- http://www.rapid7.com/products/metasploit/
-- https://debian-facile.org/doc:systeme:apt:pinning
+- [Packet pinning](https://debian-facile.org/doc:systeme:apt:pinning)
 - http://woodmann.com/TiGa/idaseries.html
 - https://github.com/rpp0/MBE
-- https://thehackademy.net/
+- [HZV](https://thehackademy.net/)
 - http://www.bortzmeyer.org/
 - http://www.ravellosystems.com/customer-case-studies/blackfin-virtual-training-labs-environment-on-cloud
 - http://www.cybrary.it/course/python/
 - https://help.ubuntu.com/community/WifiDocs/WiFiHowTo
 - http://ubuntuforums.org/showthread.php?t=1238387
-- https://linuxfr.org/news/le-bepo-en-console-inclus-de-base-sous-gnu-linux
 - http://www.pc-shareware.com/unzipwiz.htm
 - http://captf.com/practice-ctf/
 - http://packetstormsecurity.com/
