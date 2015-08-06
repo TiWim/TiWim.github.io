@@ -60,3 +60,5 @@ target/
 vuln{,erable}
 a.out
 *.swp
+scripts/vulnerable
+scripts/vulnerable64

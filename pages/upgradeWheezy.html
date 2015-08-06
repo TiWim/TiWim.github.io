@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
 <title>Hacking Skills</title>
+<meta id='page-params'
+    theme='cyborg'
+        title='Hacking Skills'
+            menu='Home,index.html,GDB,pages/analyse.html,Links,pages/linklist.html,Practical Installation,pages/building.html, Wheezy Upgrade,pages/upgradeWheezy.html'
+                active='5'
+                    root='../'>
+    <xmp>
 
-<xmp theme="slate" style="display:none;">
 
-
-# Upgrader Wheezy 
+# Upgrader Wheezy
 
 La nouvelle version stable de Debian est sortie le 25 avril. Pourquoi s'en
 priver?
@@ -13,6 +18,7 @@ priver?
 Pour upgrader sa distri, rien de plus facile:
 
 Vous avez ce tableau de correspondance:
+
 
   | Nom de version |  Etat | num&eacute;ro |
   | -------------  | ----- | ------ |
@@ -23,17 +29,18 @@ Vous avez ce tableau de correspondance:
   | Sid     |     Unstable | NaN    |
 
 
+
 1. Editer son /etc/apt/sources.list, remplacer toutes les mentions "wheezy" par
 "jessie" ou "stable" ou "testing" ou encore "unstable" suivant ce que vous avez envie de faire
-  
+
   Dans /etc/apt/sources.list:
   ```bash
   deb http://ftp.fr.debian.org/debian jessie main
   deb-src http://ftp.fr.debian.org/debian jessie main
-  
+
   deb http://ftp.fr.debian.org/debian jessie-update main
   deb-src http://ftp.fr.debian.org/debian jessie-update main
-  
+
   deb http://security.debian.org/debian jessie/updates main
   deb-src http://security.debian.org/debian jessie/updates main
   ```
@@ -60,7 +67,7 @@ Vous avez ce tableau de correspondance:
     ```
 
     Il faut que la commande vous affiche les
-    informations suivantes: 
+    informations suivantes:
     ```bash
     ii  linux-headers-3.16.0-4-amd64    3.16.7-ckt9-3~deb8u1  amd64    Header files for Linux 3.16.0-4-amd64
     ii  linux-headers-3.16.0-4-common   3.16.7-ckt9-3~deb8u1  amd64    Common header files for Linux 3.16.0-4
@@ -73,7 +80,7 @@ Vous avez ce tableau de correspondance:
     ```
     S'il vous manque l'une des lignes ci-dessus en "3.16.0-4", c'est le
     moment de les t&eacute;l&eacute;charger. Cela correspond au nouveau noyau.
-    
+
 5. Mettre &agrave; jour le grub:
     ```bash
     update-grub
@@ -82,13 +89,13 @@ Vous avez ce tableau de correspondance:
     affichera alors plusieurs choix de noyaux, mais seul le 3.16
     fonctionnera d&eacute;sormais.
 
-6. Mettre &agrave; jour les pilotes graphiques: 
+6. Mettre &agrave; jour les pilotes graphiques:
   - Pour Nvidia:
     ```bash
     apt-get install nvidia-kernel-3.16.0-4-amd64 nvidia-kernel-dkms
-    ``` 
+    ```
     sinon, gdm3 ne d&eacute;marrera pas et vous n'aurez plus que le terminal.
-  - Pour les autres pilotes, je ne sais pas comment &ccedil;a se passe. 
+  - Pour les autres pilotes, je ne sais pas comment &ccedil;a se passe.
 <br>
 <br>
 7. reboot and enjoy!!!
@@ -96,13 +103,13 @@ Vous avez ce tableau de correspondance:
 <br>
 Vous pourrez avoir apr&egrave;s des petits probl&egrave;mes de d&eacute;pendances (j'ai rencontr&eacute;
 un probl&egrave;me avec Samba et vlc que j'ai r&eacute;solu en supprimant des paquets de
-vlc(vlc-data vlc-nox) qui n'&eacute;taient pas &agrave; niveau et en r&eacute;installant samba. 
+vlc(vlc-data vlc-nox) qui n'&eacute;taient pas &agrave; niveau et en r&eacute;installant samba.
 J'ai aussi rencontr&eacute; des probl&egrave;me avec initramfs qui s'est r&eacute;solu en le d&eacute;sinstallant et en installant la
-nouvelle version). Surtout, ne faites pas de upgrade entre la 2&egrave;me et la 3&egrave;me 
-&eacute;tape, vous allez perdre du temps (La machine installe des mises &agrave; jours 
+nouvelle version). Surtout, ne faites pas de upgrade entre la 2&egrave;me et la 3&egrave;me
+&eacute;tape, vous allez perdre du temps (La machine installe des mises &agrave; jours
 qu'elle va r&eacute;installer lors du dist-upgrade car cette commande g&egrave;re tous les probl&egrave;mes de d&eacute;pendances de mises &agrave; niveau.)
 
 </xmp>
 
-<script src="../strapdown.js"></script>
+<script src="http://smzg.github.io/strapdown/example/config/strapdown.js"></script>
 </html>
