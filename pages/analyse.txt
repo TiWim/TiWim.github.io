@@ -232,5 +232,5 @@ dump d'un fichier binaire en assembleur
 
 </xmp>
 
-<script src="http://smzg.github.io/strapdown/example/config/strapdown.js"></script>
+<script src="../strapdown.js"></script>
 </html>

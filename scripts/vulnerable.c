@@ -1,5 +1,5 @@
 // Author : TiWim
-// Compilation : gcc vulnerable.c -o vulnerable
+// Compilation : gcc vulnerable.c -o vulnerable -m32 -fno-stack-protector -z execstack
 // For any compilation problem, try to install libc6-dev-i386 first
 
 #include <stdio.h>
