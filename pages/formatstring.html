@@ -148,8 +148,50 @@ uid=1005(p0wn3dch03) gid=1008(ch03) groups=1005(p0wn3dch03),1008(ch03)
 
 ## Explanation:
 
+Convinced ?
+What did we do?
+We wrote an arbitrary value at an arbitrary place: We wrote the address of our shellcode at the location of __system__
 
+The GOT is a table containing pointers to the real location of libc functions. It is possible to overwrite these pointers like we just did.
 
+As said before, %x allows us to read four bytes. We can go further with %x: %100x will read four bytes but will display 100 bytes.
+Coupled with %n, we will write 100 bytes on stdout and write the value 100 (in hexadecimal) on the stack on an int (four bytes).
+
+%hn will write a short int (two bytes)
+%hhn will write one byte.
+
+How does it work ?
+
+int i = 0;
+printf("%x%n", i, i);
+
+This will display the address of i followed by "4" because the address of is four bytes in x32.
+
+Notice that you can shorten printf("%x%n", i, i); with printf("%1$x%1$n", i);
+
+This is exactly what we will do now.
+
+### Analyse of the payload:
+-------------------------------------input:-------------------------------------
+Padding [0]:
+Offset [1]:
+What [0xdeadbeef]:
+Where [0xdeadc0de]:
+-------------------------------------result-------------------------------------
+Payload len: 31
+Address: \xde\xc0\xad\xde\xe0\xc0\xad\xde
+Payload: \xde\xc0\xad\xde\xe0\xc0\xad\xde%48871x%1$hn%8126x%2$hn
+--------------------------------------------------------------------------------
+
+"\xde\xc0\xad\xde"+"\xe0\xc0\xad\xde"+"%48871x%1$hn"+"%8126x%2$hn"
+The first four bytes are an address where we want to write (0xdeadc0de).
+This address will be used by %48871x%1$hn. It will write 48871 + 8 (because of the 8bytes used for the two addresses) on 0xdeadc0de.
+If you look at it with gdb, you will see that it prints 0xbeef.
+The second four bytes are used for the second group: "%8126x%2$hn". Now, we will write 8 + 48871 + 8126 on 0xdeadc0e0. This corresponds to 0xdead.
+
+Finally, on 0xdeadc0de you will see 0xdeadbeef.
+
+With this bug, we can write on any writable section of an executable. Nice isn't it ?
 
 </xmp>
 
