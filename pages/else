@@ -1,0 +1,53 @@
+
+
+
+## Software analysis:
+
+First of all:
+we need to execute the command file on the programm to verify that we are legit to disassemble it.
+
+file ./soft
+
+Then, we can run gdb:
+
+gdb -q ./soft
+
+We can disassemble some part of the software with the command disassemble:
+
+disass main
+
+
+
+---------------
+
+
+Afficher le contenu de la stack:
+x/24x $esp
+
+
+Afficher une adresse:
+print (void*) $esp
+print (void*) $esp+0x30
+
+Afficher le contenu d'une adresse
+x/x $esp+0x30
+
+jump *adresse
+jump *main+144
+
+stepi
+nexti
+
+br *adresse
+br *main+144
+
+continue c
+run r
+kill ki
+
+watch
+
+- Objdump
+dump d'un fichier binaire en assembleur
+
+
